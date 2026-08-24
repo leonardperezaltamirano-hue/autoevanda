@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autoevaluación de Tecnología - Secundaria 🚀</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary: #3B82F6;
+            --secondary: #10B981;
+            --yellow: #F59E0B;
+            --purple: #6366F1;
+            --dark: #1E293B;
+            --light-bg: #E0F2FE;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            background-image: radial-gradient(#93C5FD 2px, transparent 2px);
+            background-size: 24px 24px;
+            color: var(--dark);
+            padding: 15px 10px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 680px;
+            width: 100%;
+            background: white;
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+            border: 4px solid var(--purple);
+            position: relative;
+        }
+
+        .btn-admin-floating {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--purple);
+            color: white;
+            border: 2px solid var(--dark);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-family: 'Fredoka One', cursive;
+            cursor: pointer;
+            box-shadow: 0 3px 0 var(--dark);
+            font-size: 0.9rem;
+            z-index: 10;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            background: #EEF2FF;
+            padding: 15px;
+            border-radius: 20px;
+            border: 3px dashed var(--purple);
+            margin-top: 25px;
+        }
+
+        .header h1 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--purple);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-weight: 700;
+            color: #334155;
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            background: #E0E7FF;
+            padding: 15px;
+            border-radius: 18px;
+            border: 3px solid var(--purple);
+        }
+
+        .input-group label {
+            display: block;
+            font-family: 'Fredoka One', cursive;
+            margin-bottom: 8px;
+            color: #4338CA;
+            font-size: 1.1rem;
+        }
+
+        .input-group input[type="text"], .input-group input[type="password"] {
+            width: 100%;
+            padding: 12px 14px;
+            border: 3px solid var(--purple);
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            outline: none;
+            background: #FFF;
+        }
+
+        .course-section {
+            margin-bottom: 20px;
+            background: #FEF3C7;
+            padding: 15px;
+            border-radius: 20px;
+            border: 3px solid var(--yellow);
+        }
+
+        .course-title {
+            font-family: 'Fredoka One', cursive;
+            color: var(--dark);
+            font-size: 1.15rem;
+            margin-bottom: 10px;
+        }
+
+        /* Rejilla de Cursos Adaptable para Secundaria */
+        .course-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 10px;
+        }
+
+        .course-card {
+            background: white;
+            border: 3px solid var(--purple);
+            border-radius: 14px;
+            padding: 10px 4px;
+            text-align: center;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1rem;
+            color: var(--purple);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 0 var(--purple);
+            user-select: none;
+        }
+
+        .course-card.active {
+            background: var(--primary) !important;
+            color: white !important;
+            border-color: var(--dark) !important;
+            box-shadow: 0 4px 0 var(--dark) !important;
+            transform: scale(1.03);
+        }
+
+        .question-card {
+            background: #F8FAFC;
+            border-radius: 18px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 3px solid #CBD5E1;
+        }
+
+        .question-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            line-height: 1.3;
+            color: var(--dark);
+        }
+
+        .options-container {
+            display: flex;
+            gap: 8px;
+            justify-content: space-between;
+        }
+
+        .options-container input[type="radio"] { display: none; }
+
+        .options-container label {
+            flex: 1;
+            text-align: center;
+            padding: 10px 4px;
+            background: white;
+            border: 3px solid #94A3B8;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.88rem;
+            transition: all 0.2s ease;
+        }
+
+        .options-container input[type="radio"]:checked + label {
+            background: var(--secondary);
+            color: white;
+            border-color: #059669;
+            box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            border: 3px solid var(--dark);
+            padding: 14px;
+            border-radius: 18px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.25rem;
+            cursor: pointer;
+            box-shadow: 0 5px 0 var(--dark);
+            margin-top: 5px;
+        }
+
+        /* Modales */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 10px;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 22px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            border: 4px solid var(--purple);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+        }
+
+        .btn-modal {
+            background: var(--secondary);
+            color: white;
+            border: 2px solid var(--dark);
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.05rem;
+            cursor: pointer;
+            box-shadow: 0 3px 0 var(--dark);
+        }
+
+        /* Dashboard Admin */
+        .admin-dashboard {
+            max-width: 950px;
+            width: 100%;
+            max-height: 92vh;
+            overflow-y: auto;
+            text-align: left;
+            padding: 20px;
+        }
+
+        .admin-header-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 3px solid var(--purple);
+            padding-bottom: 10px;
+        }
+
+        .kpi-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .kpi-card {
+            background: #F1F5F9;
+            border: 2px solid var(--purple);
+            border-radius: 14px;
+            padding: 12px 8px;
+            text-align: center;
+        }
+
+        .kpi-value {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5rem;
+            color: var(--purple);
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--dark);
+            text-transform: uppercase;
+        }
+
+        .charts-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .chart-card {
+            background: #FFF;
+            border: 2px solid #CBD5E1;
+            border-radius: 14px;
+            padding: 10px;
+            height: 240px;
+            position: relative;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .admin-table th, .admin-table td {
+            border: 1px solid var(--purple);
+            padding: 8px 6px;
+            text-align: center;
+        }
+
+        .admin-table th { background-color: var(--yellow); font-family: 'Fredoka One', cursive; }
+
+        @media (max-width: 600px) {
+            .options-container { flex-direction: column; }
+            .header h1 { font-size: 1.4rem; }
+            .container { padding: 15px; }
+            .kpi-value { font-size: 1.25rem; }
+            .chart-card { height: 210px; }
+            .admin-table { font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <button class="btn-admin-floating" onclick="openAdminLogin()">🔐 Admin</button>
+
+    <div class="header">
+        <h1>🚀 Autoevaluación de Tecnología 🚀</h1>
+        <p>Secundaria - ¡Evalúa tu desempeño con honestidad!</p>
+    </div>
+
+    <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted){onSuccess();}"></iframe>
+
+    <form id="evaluationForm" action="https://script.google.com/macros/s/AKfycbwZj8VO-aR8KZ8XmyUqSgby8SVzPLaG0APV2RdGy9DXTttArw3WPYvn6GSYegKEwcE2iA/exec" method="POST" target="hidden_iframe">
+        
+        <div class="input-group">
+            <label for="studentName">👤 Apellido y Nombre:</label>
+            <input type="text" id="studentName" name="estudiante" required placeholder="Ingresa tu apellido y nombre...">
+        </div>
+
+        <div class="course-section">
+            <div class="course-title">🏫 Selecciona tu Curso:</div>
+            
+            <select name="curso" id="real_course_select" required style="display:none;">
+                <option value="">-- Seleccionar --</option>
+                <option value="S1A">S1A</option>
+                <option value="S2A">S2A</option>
+                <option value="S3A">S3A</option>
+                <option value="S4A">S4A</option>
+                <option value="S4B">S4B</option>
+                <option value="S5A">S5A</option>
+                <option value="S6A">S6A</option>
+            </select>
+
+            <div class="course-grid">
+                <div class="course-card" onclick="setCourse('S1A', this)">⚡ S1A</div>
+                <div class="course-card" onclick="setCourse('S2A', this)">⚡ S2A</div>
+                <div class="course-card" onclick="setCourse('S3A', this)">⚡ S3A</div>
+                <div class="course-card" onclick="setCourse('S4A', this)">⚙️ S4A</div>
+                <div class="course-card" onclick="setCourse('S4B', this)">⚙️ S4B</div>
+                <div class="course-card" onclick="setCourse('S5A', this)">🎓 S5A</div>
+                <div class="course-card" onclick="setCourse('S6A', this)">🎓 S6A</div>
+            </div>
+        </div>
+
+        <input type="hidden" name="p1_texto" id="p1_texto"><input type="hidden" name="p1_puntos" id="p1_puntos">
+        <input type="hidden" name="p2_texto" id="p2_texto"><input type="hidden" name="p2_puntos" id="p2_puntos">
+        <input type="hidden" name="p3_texto" id="p3_texto"><input type="hidden" name="p3_puntos" id="p3_puntos">
+        <input type="hidden" name="p4_texto" id="p4_texto"><input type="hidden" name="p4_puntos" id="p4_puntos">
+        <input type="hidden" name="p5_texto" id="p5_texto"><input type="hidden" name="p5_puntos" id="p5_puntos">
+        <input type="hidden" name="suma_puntos" id="suma_puntos"><input type="hidden" name="nota_final" id="nota_final">
+
+        <div class="question-card">
+            <p class="question-title">1. Uso responsable de herramientas digitales y dispositivos en clase.</p>
+            <div class="options-container">
+                <input type="radio" id="p1_siempre" name="p1_radio" value="Siempre" data-score="2" required><label for="p1_siempre">😊 Siempre</label>
+                <input type="radio" id="p1_aveces" name="p1_radio" value="A veces" data-score="1"><label for="p1_aveces">😐 A veces</label>
+                <input type="radio" id="p1_nunca" name="p1_radio" value="Nunca" data-score="0"><label for="p1_nunca">🙁 Nunca</label>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <p class="question-title">2. Puntualidad, compromiso y responsabilidad en proyectos y tareas.</p>
+            <div class="options-container">
+                <input type="radio" id="p2_siempre" name="p2_radio" value="Siempre" data-score="2" required><label for="p2_siempre">😊 Siempre</label>
+                <input type="radio" id="p2_aveces" name="p2_radio" value="A veces" data-score="1"><label for="p2_aveces">😐 A veces</label>
+                <input type="radio" id="p2_nunca" name="p2_radio" value="Nunca" data-score="0"><label for="p2_nunca">🙁 Nunca</label>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <p class="question-title">3. Respeto al docente y atención al seguimiento de instrucciones.</p>
+            <div class="options-container">
+                <input type="radio" id="p3_siempre" name="p3_radio" value="Siempre" data-score="2" required><label for="p3_siempre">😊 Siempre</label>
+                <input type="radio" id="p3_aveces" name="p3_radio" value="A veces" data-score="1"><label for="p3_aveces">😐 A veces</label>
+                <input type="radio" id="p3_nunca" name="p3_radio" value="Nunca" data-score="0"><label for="p3_nunca">🙁 Nunca</label>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <p class="question-title">4. Trabajo colaborativo, aporte positivo y respeto hacia mis compañeros.</p>
+            <div class="options-container">
+                <input type="radio" id="p4_siempre" name="p4_radio" value="Siempre" data-score="2" required><label for="p4_siempre">😊 Siempre</label>
+                <input type="radio" id="p4_aveces" name="p4_radio" value="A veces" data-score="1"><label for="p4_aveces">😐 A veces</label>
+                <input type="radio" id="p4_nunca" name="p4_radio" value="Nunca" data-score="0"><label for="p4_nunca">🙁 Nunca</label>
+            </div>
+        </div>
+
+        <div class="question-card">
+            <p class="question-title">5. Cuidado de los componentes, orden y uso seguro del aula/laboratorio.</p>
+            <div class="options-container">
+                <input type="radio" id="p5_siempre" name="p5_radio" value="Siempre" data-score="2" required><label for="p5_siempre">😊 Siempre</label>
+                <input type="radio" id="p5_aveces" name="p5_radio" value="A veces" data-score="1"><label for="p5_aveces">😐 A veces</label>
+                <input type="radio" id="p5_nunca" name="p5_radio" value="Nunca" data-score="0"><label for="p5_nunca">🙁 Nunca</label>
+            </div>
+        </div>
+
+        <button type="submit" id="btnSubmit" class="btn-submit">🚀 ENVIAR AUTOEVALUACIÓN</button>
+    </form>
+</div>
+
+<!-- Modal Éxito Alumno -->
+<div id="customModal" class="modal-overlay">
+    <div class="modal-content">
+        <div style="font-size:3rem; margin-bottom:5px;">📩</div>
+        <h2 style="font-family:'Fredoka One'; color:var(--purple); margin-bottom:10px;">¡Enviado!</h2>
+        <div id="modalMessage" style="margin-bottom:15px; font-weight:600;"></div>
+        <button class="btn-modal" onclick="closeModal('customModal')">Aceptar</button>
+    </div>
+</div>
+
+<!-- Modal Login Admin -->
+<div id="adminLoginModal" class="modal-overlay">
+    <div class="modal-content">
+        <div style="font-size:3rem; margin-bottom:5px;">🔑</div>
+        <h2 style="font-family:'Fredoka One'; color:var(--purple); margin-bottom:10px;">Acceso Admin</h2>
+        <div class="input-group" style="background:transparent; border:none; padding:5px 0;">
+            <input type="password" id="adminPass" placeholder="Contraseña...">
+        </div>
+        <button class="btn-modal" onclick="checkAdminPassword()">Ingresar</button>
+        <button class="btn-modal" style="background:#94A3B8; margin-top:5px;" onclick="closeModal('adminLoginModal')">Cancelar</button>
+    </div>
+</div>
+
+<!-- Modal Dashboard Completo -->
+<div id="adminDashboardModal" class="modal-overlay">
+    <div class="modal-content admin-dashboard">
+        
+        <div class="admin-header-bar">
+            <h2 style="font-family:'Fredoka One'; color:var(--purple); font-size:1.4rem;">📊 Dashboard de Analítica</h2>
+            <div style="display:flex; gap:8px;">
+                <button class="btn-modal" style="background:var(--secondary); padding:6px 10px; font-size:0.85rem;" onclick="exportCSV()">📥 Exportar CSV</button>
+                <button class="btn-modal" style="background:#EF4444; padding:6px 10px; font-size:0.85rem;" onclick="closeModal('adminDashboardModal')">✕ Cerrar</button>
+            </div>
+        </div>
+
+        <div style="margin-bottom:15px;">
+            <label for="courseFilter" style="font-weight:700;">Filtrar Curso: </label>
+            <select id="courseFilter" style="padding:6px 10px; border-radius:10px; border:2px solid var(--purple); font-weight:bold;" onchange="filterDataByCourse()">
+                <option value="TODOS">Todos los Cursos</option>
+                <option value="S1A">S1A</option>
+                <option value="S2A">S2A</option>
+                <option value="S3A">S3A</option>
+                <option value="S4A">S4A</option>
+                <option value="S4B">S4B</option>
+                <option value="S5A">S5A</option>
+                <option value="S6A">S6A</option>
+            </select>
+        </div>
+
+        <!-- KPIs -->
+        <div class="kpi-container">
+            <div class="kpi-card">
+                <div class="kpi-value" id="kpiTotal">0</div>
+                <div class="kpi-label">Estudiantes</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="kpiAvg">0.0</div>
+                <div class="kpi-label">Promedio Nota (/5)</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="kpiMax">0</div>
+                <div class="kpi-label">Nota Máxima</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-value" id="kpiMin">0</div>
+                <div class="kpi-label">Nota Mínima</div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="charts-wrapper">
+            <div class="chart-card">
+                <canvas id="scoresChart"></canvas>
+            </div>
+            <div class="chart-card">
+                <canvas id="questionsChart"></canvas>
+            </div>
+        </div>
+
+        <h3 style="font-family:'Fredoka One'; color:var(--purple); margin-bottom:10px;">📋 Detalle por Estudiante</h3>
+        <div style="overflow-x:auto;">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Hora</th>
+                        <th>Curso</th>
+                        <th>Estudiante</th>
+                        <th>Puntos (/10)</th>
+                        <th>Nota (/5)</th>
+                    </tr>
+                </thead>
+                <tbody id="adminTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    let submitted = false;
+    let savedNombre = '', savedCurso = '';
+    let localDataStore = []; 
+    let chartScores = null, chartQuestions = null;
+
+    function setCourse(code, cardElement) {
+        document.getElementById('real_course_select').value = code;
+        savedCurso = code;
+        document.querySelectorAll('.course-card').forEach(card => card.classList.remove('active'));
+        cardElement.classList.add('active');
+    }
+
+    document.getElementById('evaluationForm').addEventListener('submit', function(e) {
+        const courseVal = document.getElementById('real_course_select').value;
+        if (!courseVal) {
+            e.preventDefault();
+            alert('⚠️ Selecciona tu curso antes de enviar.');
+            return false;
+        }
+
+        let totalPuntos = 0;
+        let pScores = [];
+        for (let i = 1; i <= 5; i++) {
+            const selectedOption = document.querySelector(`input[name="p${i}_radio"]:checked`);
+            if (selectedOption) {
+                const texto = selectedOption.value;
+                const score = parseInt(selectedOption.getAttribute('data-score'));
+                document.getElementById(`p${i}_texto`).value = texto;
+                document.getElementById(`p${i}_puntos`).value = score;
+                totalPuntos += score;
+                pScores.push(score);
+            }
+        }
+
+        const notaFinalEntera = Math.round(totalPuntos / 2);
+        document.getElementById('suma_puntos').value = Math.round(totalPuntos);
+        document.getElementById('nota_final').value = notaFinalEntera;
+
+        savedNombre = document.getElementById('studentName').value;
+        
+        localDataStore.push({
+            fecha: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
+            curso: courseVal,
+            estudiante: savedNombre,
+            puntosPreguntas: pScores,
+            total: Math.round(totalPuntos),
+            nota: notaFinalEntera
+        });
+
+        submitted = true;
+        const btn = document.getElementById('btnSubmit');
+        btn.disabled = true;
+        btn.innerText = 'Enviando... ⏳';
+    });
+
+    function onSuccess() {
+        if (submitted) {
+            document.getElementById('modalMessage').innerHTML = `¡Gracias, <strong>${savedNombre}</strong> (${savedCurso})!<br>Autoevaluación registrada.`;
+            document.getElementById('customModal').style.display = 'flex';
+            document.getElementById('evaluationForm').reset();
+            document.querySelectorAll('.course-card').forEach(card => card.classList.remove('active'));
+            const btn = document.getElementById('btnSubmit');
+            btn.disabled = false;
+            btn.innerText = '🚀 ENVIAR AUTOEVALUACIÓN';
+            submitted = false;
+        }
+    }
+
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    function openAdminLogin() {
+        document.getElementById('adminPass').value = '';
+        document.getElementById('adminLoginModal').style.display = 'flex';
+    }
+
+    function checkAdminPassword() {
+        if (document.getElementById('adminPass').value === 'adminroot') {
+            closeModal('adminLoginModal');
+            document.getElementById('adminDashboardModal').style.display = 'flex';
+            filterDataByCourse();
+        } else {
+            alert('❌ Contraseña incorrecta');
+        }
+    }
+
+    function filterDataByCourse() {
+        const selectedCourse = document.getElementById('courseFilter').value;
+        const tbody = document.getElementById('adminTableBody');
+        tbody.innerHTML = '';
+
+        const filtered = selectedCourse === 'TODOS' 
+            ? localDataStore 
+            : localDataStore.filter(d => d.curso === selectedCourse);
+
+        const totalEst = filtered.length;
+        if (totalEst > 0) {
+            const sumNotas = filtered.reduce((acc, current) => acc + current.nota, 0);
+            const avg = (sumNotas / totalEst).toFixed(1);
+            const max = Math.max(...filtered.map(d => d.nota));
+            const min = Math.min(...filtered.map(d => d.nota));
+
+            document.getElementById('kpiTotal').innerText = totalEst;
+            document.getElementById('kpiAvg').innerText = avg;
+            document.getElementById('kpiMax').innerText = max;
+            document.getElementById('kpiMin').innerText = min;
+
+            filtered.forEach(row => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${row.fecha}</td>
+                        <td><strong>${row.curso}</strong></td>
+                        <td>${row.estudiante}</td>
+                        <td>${row.total}/10</td>
+                        <td><strong>${row.nota}/5</strong></td>
+                    </tr>
+                `;
+            });
+        } else {
+            document.getElementById('kpiTotal').innerText = '0';
+            document.getElementById('kpiAvg').innerText = '0.0';
+            document.getElementById('kpiMax').innerText = '0';
+            document.getElementById('kpiMin').innerText = '0';
+            tbody.innerHTML = '<tr><td colspan="5">Sin datos disponibles.</td></tr>';
+        }
+
+        renderCharts(filtered);
+    }
+
+    function renderCharts(data) {
+        const ctxScores = document.getElementById('scoresChart').getContext('2d');
+        const counts = [1, 2, 3, 4, 5].map(s => data.filter(d => d.nota === s).length);
+
+        if (chartScores) chartScores.destroy();
+        chartScores = new Chart(ctxScores, {
+            type: 'bar',
+            data: {
+                labels: ['1 Pto', '2 Pts', '3 Pts', '4 Pts', '5 Pts'],
+                datasets: [{ label: 'Estudiantes por Nota', data: counts, backgroundColor: '#6366F1' }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        const ctxQuestions = document.getElementById('questionsChart').getContext('2d');
+        let pMeans = [0, 0, 0, 0, 0];
+        if (data.length > 0) {
+            for (let i = 0; i < 5; i++) {
+                const sumP = data.reduce((acc, d) => acc + (d.puntosPreguntas[i] || 0), 0);
+                pMeans[i] = (sumP / data.length).toFixed(1);
+            }
+        }
+
+        if (chartQuestions) chartQuestions.destroy();
+        chartQuestions = new Chart(ctxQuestions, {
+            type: 'radar',
+            data: {
+                labels: ['P1: Digital', 'P2: Tareas', 'P3: Respeto', 'P4: Equipo', 'P5: Equipos'],
+                datasets: [{ label: 'Promedio (/2 pts)', data: pMeans, backgroundColor: 'rgba(59, 130, 246, 0.3)', borderColor: '#3B82F6' }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { r: { min: 0, max: 2 } } }
+        });
+    }
+
+    function exportCSV() {
+        if (localDataStore.length === 0) {
+            alert('No hay datos para exportar.');
+            return;
+        }
+        let csvContent = "data:text/csv;charset=utf-8,Hora,Curso,Estudiante,Total_10,Nota_5\n";
+        localDataStore.forEach(d => {
+            csvContent += `${d.fecha},${d.curso},"${d.estudiante}",${d.total},${d.nota}\n`;
+        });
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "autoevaluaciones_secundaria.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>
+
+</body>
+</html>
